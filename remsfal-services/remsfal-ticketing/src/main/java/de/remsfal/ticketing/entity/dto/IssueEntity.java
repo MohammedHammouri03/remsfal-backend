@@ -48,6 +48,15 @@ public class IssueEntity extends AbstractEntity implements IssueModel {
     @Column("created_by")
     private UUID createdBy;
 
+    @Column("priority")
+    private String priority;
+
+    @Column("priority_score")
+    private double priorityScore;
+
+    @Column("priority_model_version")
+    private String priorityModelVersion;
+
     public IssueKey getKey() {
         return key;
     }
@@ -176,6 +185,30 @@ public class IssueEntity extends AbstractEntity implements IssueModel {
 
     public void setCreatedBy(UUID createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public double getPriorityScore() {
+        return priorityScore;
+    }
+
+    public void setPriorityScore(double priorityScore) {
+        this.priorityScore = priorityScore;
+    }
+
+    public String getPriorityModelVersion() {
+        return priorityModelVersion;
+    }
+
+    public void setPriorityModelVersion(String priorityModelVersion) {
+        this.priorityModelVersion = priorityModelVersion;
     }
 
     public void generateId() {

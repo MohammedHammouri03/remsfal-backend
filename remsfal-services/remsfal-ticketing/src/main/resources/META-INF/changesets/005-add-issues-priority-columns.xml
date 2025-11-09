@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-#
-# Author: Alexander Stanik [alexander.stanik@htw-berlin.de]
-#
--->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
@@ -12,10 +7,20 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog-ext
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="META-INF/changesets/001-create-issues-table.xml"/>
-    <include file="META-INF/changesets/002-create-chat-sessions-table.xml"/>
-    <include file="META-INF/changesets/003-create-chat-messages-table.xml"/>
-    <include file="META-INF/changesets/004-add-issues-indexes.xml"/>
-    <include file="META-INF/changesets/005-add-issues-priority-columns.xml"/>
+    <changeSet id="remsfal-ticketing-0.0.5-issues-priority" author="auto.generated@openai.com">
+        <comment>Add priority fields to issues table</comment>
+        <sql>
+            ALTER TABLE REMSFAL.issues
+                ADD priority TEXT;
+        </sql>
+        <sql>
+            ALTER TABLE REMSFAL.issues
+                ADD priority_score DOUBLE;
+        </sql>
+        <sql>
+            ALTER TABLE REMSFAL.issues
+                ADD priority_model_version TEXT;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
