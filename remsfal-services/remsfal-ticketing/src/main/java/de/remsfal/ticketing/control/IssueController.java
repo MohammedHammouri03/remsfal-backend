@@ -1,5 +1,6 @@
 package de.remsfal.ticketing.control;
 
+import de.remsfal.ticketing.entity.dto.TicketCreated;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -28,6 +29,9 @@ public class IssueController {
     @Inject
     IssueRepository repository;
 
+    @Inject
+    PriorityEventProducer priorityEventProducer;
+
     public IssueModel createIssue(final UserModel user, final IssueModel issue) {
         return createIssue(user, issue, Status.OPEN);
     }
@@ -42,7 +46,26 @@ public class IssueController {
         entity.setTitle(issue.getTitle());
         entity.setStatus(initialStatus);
         entity.setDescription(issue.getDescription());
-        return repository.insert(entity);
+        IssueEntity saved = repository.insert(entity);
+
+        var text = (saved.getDescription() != null && !saved.getDescription().isBlank())
+                ? saved.getDescription()
+                : (saved.getTitle() != null ? saved.getTitle() : "");
+
+        var dto = new TicketCreated(
+                saved.getId(),
+                saved.getTenancyId(),
+                text,
+                java.util.Map.of(
+                        "location", saved.getType() != null ? saved.getType().name() : "UNKNOWN",
+                        "submittedAt", saved.getCreatedAt() != null ? saved.getCreatedAt().toString()
+                                : java.time.Instant.now().toString()
+                )
+        );
+
+        priorityEventProducer.send(dto);
+
+        return saved;
     }
 
     public IssueEntity getIssue(final UUID issueId) {
