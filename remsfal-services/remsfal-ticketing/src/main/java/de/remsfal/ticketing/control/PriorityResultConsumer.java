@@ -24,7 +24,7 @@ public class PriorityResultConsumer {
     public void consume(TicketPrioritized ev) {
         var ticketId = ev.ticketId();
         log.infov("Kafka received ticket.prioritized ticketId={0} prio={1} score={2} model={3}",
-                ticketId, ev.priority(), ev.modelVersion());
+                ticketId, ev.priority(), ev.score(), ev.modelVersion());
 
         Optional<IssueEntity> opt = issueRepository.findByIssueId(ticketId);
         if (opt.isEmpty()){
